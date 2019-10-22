@@ -3,11 +3,13 @@ package no.ntnu.datakomm_a5.haakoler;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Scanner;
 
 import org.json.JSONObject;
 
 public class HTTPGetter {
+
     private final String BASE_URL;
 
     /**
@@ -51,14 +53,20 @@ public class HTTPGetter {
      */
     public String getString(String path) {
         String response = null;
+
         try {
+
             URL url = new URL(BASE_URL + path);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
+
             if (connection.getResponseCode() == 200) {
+
                 response = readResponse(connection);
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
+
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -73,14 +81,20 @@ public class HTTPGetter {
      */
     private String readResponse(HttpURLConnection connection) {
         StringBuilder response = new StringBuilder();
+
         try {
+
             Scanner in = new Scanner(connection.getInputStream());
+
             while (in.hasNextLine()) {
+
                 response.append(in.nextLine());
-                //response.append("\n");
+                // response.append("\n");
             }
             in.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
+
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
