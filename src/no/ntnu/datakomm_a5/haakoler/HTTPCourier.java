@@ -32,7 +32,7 @@ public class HTTPCourier {
      * @param host The host
      */
     public HTTPCourier(String host) {
-        URL_BASE = "http://" + host + ":80/";
+        URL_BASE = "http://" + host + "/";
     }
 
     /**
