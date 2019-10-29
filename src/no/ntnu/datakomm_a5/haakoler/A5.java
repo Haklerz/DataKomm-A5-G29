@@ -8,7 +8,7 @@ public class A5 {
     private final String PHONE;
     private int sessionId;
 
-    public A5(String host, String email,String phone) {
+    public A5(String host, String email, String phone) {
         server = new HTTPCourier(host);
         EMAIL = email;
         PHONE = phone;
@@ -18,7 +18,7 @@ public class A5 {
         A5 a5 = new A5("datakomm.work", "haakoler@stud.ntnu.no", "94825606");
 
         a5.authorize();
-        a5.test();
+        a5.hello();
     }
 
     private void authorize() {
@@ -31,12 +31,17 @@ public class A5 {
         }
     }
 
-    private void test() {
-        JSONObject task = getTask(4);
-        System.out.println(task.toString());
+    private void hello() {
+        printJSONObject(getTask(6));
     }
 
     private JSONObject getTask(int taskNr) {
         return server.get("dkrest/gettask/" + taskNr + "?sessionId=" + sessionId);
+    }
+
+    private void printJSONObject(JSONObject json) {
+        for (String key : json.keySet()) {
+            System.out.println(key + " : " + json.get(key));
+        }
     }
 }
