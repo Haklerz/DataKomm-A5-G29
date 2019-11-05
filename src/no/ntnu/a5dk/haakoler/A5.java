@@ -118,23 +118,22 @@ public class A5 {
     }
 
     /**
-     * Tries to solve the secret task 2016, but fails. (╯°□°)╯︵ ┻━┻
+     * Solves the secret task.
      */
     private static void secret() {
         JSONObject task = getTask(2016);
         printJSONObject("Secret Task", task);
 
         JSONArray arguments = task.getJSONArray("arguments");
-        long networkIp = Long.parseLong(arguments.getString(0).replace(".", ""));
-        long subnetMask = Long.parseLong(arguments.getString(1).replace(".", ""));
-        // System.out.println("nwIP:" + networkIp);
-        // System.out.println("mask:" + subnetMask);
-        long ipAddress = networkIp & subnetMask;
+        String[] networkIp = arguments.getString(0).split("\\.");
+        String[] subnetMask = arguments.getString(1).split("\\.");
 
-        String ipString = (ipAddress & 0xFF000000) + "." + (ipAddress & 0xFF0000) + "." + (ipAddress & 0xFF00) + ".0";
+        String ip = (Integer.parseInt(networkIp[0]) & Integer.parseInt(subnetMask[0])) + "." +
+            (Integer.parseInt(networkIp[1]) & Integer.parseInt(subnetMask[1])) + "." +
+            (Integer.parseInt(networkIp[2]) & Integer.parseInt(subnetMask[2])) + ".1";
 
         JSONObject solution = new JSONObject();
-        solution.put("ip", ipString);
+        solution.put("ip", ip);
         printJSONObject("Solution", solution);
 
         JSONObject result = solveTask(solution);
@@ -183,7 +182,8 @@ public class A5 {
     }
 
     /**
-     * MD5 hash algorithm. Stolen from https://www.geeksforgeeks.org/md5-hash-in-java
+     * MD5 hash algorithm. Stolen from
+     * https://www.geeksforgeeks.org/md5-hash-in-java
      */
     public static String md5(String input) {
         String hashtext = null;
