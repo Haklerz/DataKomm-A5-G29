@@ -118,7 +118,7 @@ public class A5 {
     }
 
     /**
-     * Tries to solve the secret task 2016, but fails sadly.
+     * Tries to solve the secret task 2016, but fails. (╯°□°)╯︵ ┻━┻
      */
     private static void secret() {
         JSONObject task = getTask(2016);
@@ -127,8 +127,8 @@ public class A5 {
         JSONArray arguments = task.getJSONArray("arguments");
         long networkIp = Long.parseLong(arguments.getString(0).replace(".", ""));
         long subnetMask = Long.parseLong(arguments.getString(1).replace(".", ""));
-        System.out.println("nwIP:" + networkIp);
-        System.out.println("mask:" + subnetMask);
+        // System.out.println("nwIP:" + networkIp);
+        // System.out.println("mask:" + subnetMask);
         long ipAddress = networkIp & subnetMask;
 
         String ipString = (ipAddress & 0xFF000000) + "." + (ipAddress & 0xFF0000) + "." + (ipAddress & 0xFF00) + ".0";
@@ -169,10 +169,10 @@ public class A5 {
     }
 
     /**
-     * Prints a JSONObject to the terminal.
+     * Prints a <code>JSONObject</code> to the terminal.
      * 
      * @param name The name of the object
-     * @param json The JSONObject to be printed
+     * @param json The <code>JSONObject</code> to be printed
      */
     private static void printJSONObject(String name, JSONObject json) {
         System.out.println(name + ": {");
@@ -183,7 +183,7 @@ public class A5 {
     }
 
     /**
-     * MD5 hash algorithm.
+     * MD5 hash algorithm. Stolen from https://www.geeksforgeeks.org/md5-hash-in-java
      */
     public static String md5(String input) {
         String hashtext = null;
