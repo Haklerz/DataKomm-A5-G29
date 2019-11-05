@@ -1,4 +1,4 @@
-package no.ntnu.datakomm_a5.haakoler;
+package no.ntnu.a5dk.haakoler;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -7,42 +7,40 @@ import java.security.NoSuchAlgorithmException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/**
+ * Solution for task A5.
+ */
 public class A5 {
-    private final HTTPCourier server;
-    private final String EMAIL;
-    private final String PHONE;
-    private int sessionId;
+    private static final HTTPCourier server = new HTTPCourier("datakomm.work");
+    private static int sessionId;
 
-    public A5(String host, String email, String phone) {
-        server = new HTTPCourier(host);
-        EMAIL = email;
-        PHONE = phone;
+    public static final void main(String[] args) {
+        authorize("haakoler@stud.ntnu.no", "94825606");
+        hello();
+        echo();
+        multiply();
+        crackPinCode();
+        secret();
+        showResults();
     }
 
-    public static void main(String[] args) {
-        A5 a5 = new A5("datakomm.work", "haakoler@stud.ntnu.no", "94825606");
-
-        a5.authorize();
-        a5.hello();
-        a5.echo();
-        a5.multiply();
-        a5.crackPinCode();
-        a5.secret();
-        a5.results();
-    }
-
-    private void authorize() {
+    /**
+     * Authorizes and gets a sessionId.
+     */
+    private static void authorize(String email, String phone) {
         JSONObject credentials = new JSONObject();
-        credentials.put("email", EMAIL);
-        credentials.put("phone", PHONE);
+        credentials.put("email", email);
+        credentials.put("phone", phone);
         JSONObject response = server.post(credentials, "dkrest/auth");
         if (response.has("sessionId")) {
             sessionId = response.getInt("sessionId");
         }
     }
 
-    private void hello() {
-        System.out.println();
+    /**
+     * Says hello to the server.
+     */
+    private static void hello() {
         JSONObject task = getTask(1);
         printJSONObject("Task 1", task);
 
@@ -54,8 +52,10 @@ public class A5 {
         printJSONObject("Result", result);
     }
 
-    private void echo() {
-        System.out.println();
+    /**
+     * Echoes back to the server.
+     */
+    private static void echo() {
         JSONObject task = getTask(2);
         printJSONObject("Task 2", task);
 
@@ -70,8 +70,10 @@ public class A5 {
         printJSONObject("Result", result);
     }
 
-    private void multiply() {
-        System.out.println();
+    /**
+     * Multiplies n numbers together.
+     */
+    private static void multiply() {
         JSONObject task = getTask(3);
         printJSONObject("Task 3", task);
 
@@ -89,8 +91,10 @@ public class A5 {
         printJSONObject("Result", result);
     }
 
-    private void crackPinCode() {
-        System.out.println();
+    /**
+     * Cracks the MD5 hashed 4-digit pin code.
+     */
+    private static void crackPinCode() {
         JSONObject task = getTask(4);
         printJSONObject("Task 4", task);
 
@@ -113,8 +117,10 @@ public class A5 {
         printJSONObject("Result", result);
     }
 
-    private void secret() {
-        System.out.println();
+    /**
+     * Tries to solve the secret task 2016, but fails sadly.
+     */
+    private static void secret() {
         JSONObject task = getTask(2016);
         printJSONObject("Secret Task", task);
 
@@ -125,7 +131,7 @@ public class A5 {
         System.out.println("mask:" + subnetMask);
         long ipAddress = networkIp & subnetMask;
 
-        String ipString = (ipAddress & 0xFF000000) + "." + (ipAddress & 0x00FF0000) + "." + (ipAddress & 0x0000FF00) + ".0";
+        String ipString = (ipAddress & 0xFF000000) + "." + (ipAddress & 0xFF0000) + "." + (ipAddress & 0xFF00) + ".0";
 
         JSONObject solution = new JSONObject();
         solution.put("ip", ipString);
@@ -135,20 +141,40 @@ public class A5 {
         printJSONObject("Result", result);
     }
 
-    private void results() {
-        System.out.println();
+    /**
+     * Gets and prints the results of the tests.
+     */
+    private static void showResults() {
         printJSONObject("Results", server.get("dkrest/results/" + sessionId));
     }
 
-    private JSONObject solveTask(JSONObject solution) {
+    /**
+     * Posts a soluiton to a task ot the server.
+     * 
+     * @param solution The solution
+     * @return The result
+     */
+    private static JSONObject solveTask(JSONObject solution) {
         return server.post(solution.put("sessionId", sessionId), "dkrest/solve");
     }
 
-    private JSONObject getTask(int taskNr) {
+    /**
+     * Gets a task from the server.
+     * 
+     * @param taskNr The number of the task to get
+     * @return The task
+     */
+    private static JSONObject getTask(int taskNr) {
         return server.get("dkrest/gettask/" + taskNr + "?sessionId=" + sessionId);
     }
 
-    private void printJSONObject(String name, JSONObject json) {
+    /**
+     * Prints a JSONObject to the terminal.
+     * 
+     * @param name The name of the object
+     * @param json The JSONObject to be printed
+     */
+    private static void printJSONObject(String name, JSONObject json) {
         System.out.println(name + ": {");
         for (String key : json.keySet()) {
             System.out.println("    \"" + key + "\" : " + json.get(key));
@@ -156,29 +182,21 @@ public class A5 {
         System.out.println("}");
     }
 
+    /**
+     * MD5 hash algorithm.
+     */
     public static String md5(String input) {
         String hashtext = null;
         try {
-
-            // Static getInstance method is called with hashing MD5
             MessageDigest md = MessageDigest.getInstance("MD5");
-
-            // digest() method is called to calculate message digest
-            // of an input digest() return array of byte
             byte[] messageDigest = md.digest(input.getBytes());
-
-            // Convert byte array into signum representation
             BigInteger no = new BigInteger(1, messageDigest);
-
-            // Convert message digest into hex value
             hashtext = no.toString(16);
             while (hashtext.length() < 32) {
                 hashtext = "0" + hashtext;
             }
         }
         catch (NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
         return hashtext;
     }

@@ -1,4 +1,4 @@
-package no.ntnu.datakomm_a5.haakoler;
+package no.ntnu.a5dk.haakoler;
 
 import java.io.IOException;
 import java.io.InputStream;
